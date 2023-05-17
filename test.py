@@ -1,8 +1,10 @@
 import numpy as np
 import numpy.linalg as la
 
-k = 1
-A = np.matrix([ [0, 1] , [-k, 0] ])
+k = 3
+b = 0.1
+
+A = np.matrix([ [0, 1] , [-k, -b] ])
 # print(A)
 
 # eigvals, eigvecs = la.eig(A)
@@ -27,7 +29,7 @@ while t <= 5:
     v_ = state[0,1]
 
     print(f'({t}, {x_})')
-    print(f'({t}, {v_})')
+    # print(f'({t}, {v_})')
     t += 0.01
 
 # print(np.real(x(0.5)[0,0]))
