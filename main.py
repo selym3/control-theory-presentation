@@ -3,11 +3,6 @@ import numpy.linalg as la
 
 import matplotlib.pyplot as plt
 
-
-# def rk4(f, x_k, u_k, h):
-#     k_1 = f(x_k, u_k)
-
-
 class LinearSystem:
     """
     Defines a linear system, x' = Ax + Bu, in terms of 
@@ -111,8 +106,8 @@ def calculate_K_with_poles(system, poles):
     # 
     # It is row reduce to find k1, k2. 
     # 
-    # The below code handles edge cases in row reduction, probably needs more
-    # edge cases.
+    # The below code handles edge cases in the row reduction, probably 
+    # needs more edge cases.
 
     if e != 0:
         k2 = (n * e - m * x)/(y * e - f * x)
@@ -129,29 +124,38 @@ def calculate_K_with_poles(system, poles):
 
 if __name__ == "__main__":
     
-    m = 1.0
-    k = 1.2
-    b = 0.0
+    m = 1.0 # kg
+    k = 1.2 # N/m
+    b = 0.0 # Ns/m
 
+    # create dynamics matrices
     A = np.array([ [ 0, 1 ] ,
                  [ -k/m, -b/m ]])
     
     B = np.array([ [ 0 ],
                    [ 1/m ] ])
     
+    # Linear system represents x' = Ax + Bu equation
     system = LinearSystem(A, B)
 
+    # Create initial conditions
     x_0 = np.array([ 1, 0 ])
 
+    # Create "simulation" that uses the differential equation 
+    # and initial conditions to advance system over time
     simulation = LinearSystemSim(system, x_0)
 
-
+    # Create reference vector
     r = np.array([ 0, 0 ])
+
+    # Find K matrix for control law
     poles = [ -2, -1 ]
     K = calculate_K_with_poles(system, poles)
 
+    # Write control law u = K(r - x)
     u = lambda x, t: K @ (r - x)
 
+    # Setup simulation and plotting run time
     total_time = 10
     time_step = 0.005
 
