@@ -56,21 +56,24 @@ def record_system(simulation, u, total_time, time_step):
         time += time_step
 
         T.append(time)
-        U.append(u)
+        U.append(u_t[0])
         X.append(simulation.x[0])
 
     return T, U, X
 
-def plot_system(simulation, u_t, total_time, time_step):
+def plot_system(simulation, u_t, total_time, time_step, config=None):
     """
     Opens a matplotlib plot to plot the system over time
     """
-    fig, ax = plt.subplots()
+    fig, (ax1, ax2) = plt.subplots(2)
 
     T, U, X = record_system(simulation, u_t, total_time, time_step)
-    ax.plot(T, X)
+    ax1.plot(T, X)
+    ax2.plot(T, U)
 
-    fig.show()
+    if config is not None:
+        config(fig, ax1, ax2)
+
     plt.show()
 
 def calculate_K_with_poles(system, poles):
@@ -155,7 +158,7 @@ if __name__ == "__main__":
     # Write control law u = K(r - x)
     u = lambda x, t: K @ (r - x)
 
-    # Setup simulation and plotting run time
+    # Setup simulation and plotting configuration
     total_time = 10
     time_step = 0.005
 
