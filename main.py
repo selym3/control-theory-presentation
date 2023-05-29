@@ -3,6 +3,8 @@ import numpy.linalg as la
 
 import matplotlib.pyplot as plt
 
+import sys
+
 class LinearSystem:
     """
     Defines a linear system, x' = Ax + Bu, in terms of 
@@ -45,9 +47,9 @@ def record_system(simulation, u, total_time, time_step):
 
     return (time array), (input array [first element]), (state array [first element])
     """
-    T = [0]
-    U = [0]
-    X = [simulation.x[0]]
+    T = []
+    U = []
+    X = []
     
     time = 0
     while time <= total_time:
@@ -61,9 +63,24 @@ def record_system(simulation, u, total_time, time_step):
 
     return T, U, X
 
-def plot_system(simulation, u_t, total_time, time_step, config=None):
+def plot_system_state(simulation, u_t, total_time, time_step, config=None):
     """
-    Opens a matplotlib plot to plot the system over time
+    Opens a matplotlib plot to plot the system state (first element of state vector) over time
+    """
+    fig, ax = plt.subplots()
+
+    T, U, X = record_system(simulation, u_t, total_time, time_step)
+    ax.plot(T, X)
+
+    if config is not None:
+        config(fig, ax)
+
+    plt.show()
+
+def plot_system_state_and_input(simulation, u_t, total_time, time_step, config=None):
+    """
+    Opens a matplotlib plot to plot the system state (first element of state vector) 
+    and input (first element) over time
     """
     fig, (ax1, ax2) = plt.subplots(2)
 
@@ -76,7 +93,7 @@ def plot_system(simulation, u_t, total_time, time_step, config=None):
 
     plt.show()
 
-def calculate_K_with_poles(system, poles):
+def calculate_K_from_poles(system, poles):
     """
     Calculates a K matrix for a system given poles. Only works for 2 state, 1 input
     systems (A is 2x2, B is 2x1).
@@ -153,7 +170,7 @@ if __name__ == "__main__":
 
     # Find K matrix for control law
     poles = [ -2, -1 ]
-    K = calculate_K_with_poles(system, poles)
+    K = calculate_K_from_poles(system, poles)
 
     # Write control law u = K(r - x)
     u = lambda x, t: K @ (r - x)
@@ -162,4 +179,19 @@ if __name__ == "__main__":
     total_time = 10
     time_step = 0.005
 
-    plot_system(simulation, u, total_time, time_step)
+    def config(fig, ax1, ax2):
+        fig.suptitle(f'Spring-Mass-Damper System ({m=}kg, {k=}N/m, {b=}Ns/m)')
+
+        ax1.set_xlabel('Time (s)')
+        ax1.set_ylabel('Position (m)')
+        ax1.set_title('Position vs Time')
+
+        ax2.set_xlabel('Time (s)')
+        ax2.set_ylabel('Force (N)')
+        ax2.set_title('Force Applied vs Time')
+
+        if len(sys.argv) > 1:
+            fig.savefig(f'./{sys.argv[1]}', dpi=75, bbox_inches='tight')
+
+
+    plot_system_state_and_input(simulation, u, total_time, time_step, config=config)
