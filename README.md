@@ -1,8 +1,10 @@
-# systems-of-diff-eq
+# control-theory-presentation
 
-Test code that generates plots of dynamic systems using their state-space representation. 
+Code for "Linear Algebra in Control Theory" presentation.
 
-The various `test.py` files all approximately do the same thing (plot a spring mass system) but I gradually understood what I was doing more so the quality improves. 
+Code is mostly for generating plots of dynamic systems using their state-space representation and testing methods I discuss in the presentation (calculating eigenvalues)
+
+The various `test#.py` files all approximately do the same thing (plot a spring mass system) but I gradually understood what I was doing more so the quality improves. 
 
 `test_pole_placement.py` tests an implementation I derived for a specific case of pole placement. 
 
