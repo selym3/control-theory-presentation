@@ -31,9 +31,9 @@ class LinearSystemSim:
         self.system = system
         self.x = x_0
 
-    def update(self, u_t, dt):
+    def update(self, u, dt):
         # numerical integration
-        dx_dt = self.system.calculate(self.x, u_t)
+        dx_dt = self.system.calculate(self.x, u)
         self.x = self.x + dx_dt * dt
 
 def record_system(simulation, u, total_time, time_step):
